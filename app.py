@@ -40,7 +40,10 @@ if cur.rowcount > 0:
             "closedDate": closedDate,
             "numberOfDaysAtFinn": numberOfDaysAtFinn
         })
+print(rentals)
 
+
+finnRentals = []
 for ads in (soup.select('article.ads__unit')):
    for ad in ads.select('div.ads__unit__content'):
       finnId = ad.select_one('h2.ads__unit__content__title a[id]')['id']
@@ -63,12 +66,32 @@ for ads in (soup.select('article.ads__unit')):
 
       today = date.today()
 
-      try:
+      finnRentals.append({
+          "finnId": finnId,
+          "adName": adName,
+          "address": address,
+          "m2": m2,
+          "price": price,
+          "rentalType": rentalType,
+          "createdDate": today,
+       })
 
-          sql = "INSERT INTO rentalMadla " \
-                "(adName, address, m2, price, finnId, rentalType, createdDate) " \
-                "VALUES (%s, %s, %s, %s, %s, %s, %s)"
-          cur.execute(sql, (adName, address, m2, price, finnId, rentalType, today))
-          db.commit()
-      finally:
-          cur.close()
+print(finnRentals)
+
+rentalsToAdd = []
+for f in finnRentals:
+    print(f['finnId'])
+    print(f['finnId'] not in [x['finnId'] for x in rentals])
+    if (f['finnId'] not in [x['finnId'] for x in rentals]):
+        ...
+
+
+# try:
+#
+#   sql = "INSERT INTO rentalMadla " \
+#         "(adName, address, m2, price, finnId, rentalType, createdDate) " \
+#         "VALUES (%s, %s, %s, %s, %s, %s, %s)"
+#   cur.execute(sql, (adName, address, m2, price, finnId, rentalType, today))
+#   db.commit()
+# finally:
+#   cur.close()
